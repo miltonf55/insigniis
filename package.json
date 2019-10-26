@@ -1,0 +1,25 @@
+{
+  "name": "insigniis",
+  "version": "0.5.3",
+  "description": "AppWeb Insigniis",
+  "main": "app.js",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "express-session": "^1.17.0",
+    "jade": "^1.11.0",
+    "mysql": "^2.17.1",
+    "node-sass": "^4.12.0",
+    "nodemon": "^1.19.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "keywords": [
+    "Insigniis"
+  ],
+  "author": "Milton",
+  "license": "ISC"
+}

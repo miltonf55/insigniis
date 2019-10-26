@@ -1,0 +1,61 @@
+extends ./basic.jade
+block titulo
+	title Log In
+block style 
+	link(rel="stylesheet", type="text/css", media="screen", href="css/main.css")
+block cuerpo
+	block advertencia	
+	div.form-structor
+		div(class='signup slide-up')
+			form(action="/agregarUsuario", method="post")
+				h2(class="form-title", id="signup")
+					span o 
+					|Registrarse
+				div.form-holder
+					input(type="text", class="input", placeholder="Nombre", name="nom", required)
+					input(type="text",class="input", placeholder="Apellido Paterno", name="app", required)
+					input(type="text", class="input", placeholder="Apellido Materno", name="apm",required)
+					input(type="date", class="input", placeholder="Fecha de Nacimiento", name="dat", required)
+					input(type="email", class="input", placeholder="Email", name="dino", required)
+					input(type="text", class="input", placeholder="Usuario", name="usu", required)
+					input(type="password", class="input", placeholder="Password", name="pass", required)
+					input(type="password", class="input", placeholder="Confirm Password", name="pass2", required)
+					button(class="submit-btn")
+						| Registrarse
+		div.login
+			form(action="/loginU", method="post")
+				div.center
+					h2(class="form-title", id="login")
+						span o
+						| Ingresar
+					div.form-holder
+						input(type="email", class="input", placeholder="Email", name="dino")
+						input(type="password", class="input", placeholder="Password", name="pass")
+						button(class="submit-btn")
+							| Ingresar
+	script(type="text/javascript")
+		|console.clear();
+		|const loginBtn = document.getElementById('login');
+		|const signupBtn = document.getElementById('signup');
+		|loginBtn.addEventListener('click', (e) => {
+		|let parent = e.target.parentNode.parentNode.parentNode;
+		|Array.from(e.target.parentNode.parentNode.parentNode.classList).find((element) => {
+		|if(element !== "slide-up") {
+		|parent.classList.add('slide-up')
+		|}else{
+		|signupBtn.parentNode.parentNode.classList.add('slide-up')
+		|parent.classList.remove('slide-up')
+		|}
+		|});
+		|});
+		|signupBtn.addEventListener('click', (e) => {
+		|let parent = e.target.parentNode.parentNode;
+		|Array.from(e.target.parentNode.parentNode.classList).find((element) => {
+		|if(element !== "slide-up") {
+		|parent.classList.add('slide-up')
+		|}else{
+		|loginBtn.parentNode.parentNode.parentNode.classList.add('slide-up')
+		|parent.classList.remove('slide-up')
+		|}
+		|});
+		|});

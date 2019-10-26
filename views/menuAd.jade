@@ -1,0 +1,47 @@
+extends ./basic.jade
+block titulo
+    title Ver Usuarios
+block style 
+    link(rel="stylesheet", type="text/css", media="screen", href="css/style1.css")
+block cuerpo
+    nav.menu
+        input(id="menu__toggle", type="checkbox", class='menu__toggle')
+        label(for="menu__toggle", class="menu__toggle-label")
+            svg(preserveAspectRatio='xMinYMin', viewBox='0 0 24 24')
+                path(d='M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z')
+            svg(preserveAspectRatio='xMinYMin', viewBox='0 0 24 24')
+                path(d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z")
+        ol.menu__content
+            li.menu-item
+                a(href="/homeAd")
+                    |Home
+            li.menu-item
+                a(href="#0")
+                    |Usuarios
+                ol.sub-menu
+                    li.menu-item
+                        a(href="/verUsuAd")
+                            |Ver Usuarios
+                    li.menu-item
+                        a(href="/modUsuAd")
+                            |Modificar Usuario
+                    li.menu-item
+                        a(href="/elUsuAd")
+                            |Eliminar Usuarios
+            li.menu-item
+                a(href="#0")
+                    |Delitos
+                ol.sub-menu
+                    li.menu-item
+                        a(href="#")
+                            |Modificar Delitos
+                    li.menu-item
+                        a(href="modUsu.html")
+                            |Agregar Delitos
+                    li.menu-item
+                        a(href="elUsu.html")
+                            |Eliminar Delitos
+            li.menu-item
+                a(href="/logout")
+                    |Cerrar Sesión
+    block main
