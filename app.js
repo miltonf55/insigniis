@@ -115,9 +115,9 @@ app.get('/verUsuAd', function(req, res) {
 				apm = data.map(obj => obj.apm_usu);
 				cor = data.map(obj => obj.cor_usu);
 				usu = data.map(obj => obj.usu_usu);
+				fec = data.map(obj => obj.fec_usu);
 				var usuarios=[nom, app, apm, cor, usu];
-				console.log('Hasta aquí ok')
-				res.render('verUsuarios', {nom, app, apm, cor, usu});
+				res.render('verUsuarios', {nom, app, apm, cor, usu, fec});
 		});
 				
 	} else {
@@ -130,14 +130,13 @@ app.get('/modUsuAd', function(req, res) {
 	res
 	if (req.session.loggedin) {
 		getUsuarios(function (err,data){
+				id = data.map(obj => obj.id_usu);
 				nom = data.map(obj => obj.nom_usu);
 				app = data.map(obj => obj.app_usu);
 				apm = data.map(obj => obj.apm_usu);
 				cor = data.map(obj => obj.cor_usu);
 				usu = data.map(obj => obj.usu_usu);
-				var usuarios=[nom, app, apm, cor, usu];
-				console.log('Hasta aquí ok')
-				res.render('modUsuarios', {nom, app, apm, cor, usu});
+				res.render('modUsuarios', {id, nom, app, apm, cor, usu});
 		});
 				
 	} else {
