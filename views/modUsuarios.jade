@@ -2,20 +2,32 @@ extends ./menuAd.jade
 block main
     main
         h1 Modificar Usuarios
-        each val, index in nom
-            -nombre={val}
-            -console.log(nombre)
         table(class="table table-striped")
             thead
                 tr
                     th(scope="col")
                         |Nombre de Usuario
                     th(scope="col")
+                        |Nombre
+                    th(scope="col")
+                        |Apellido Paterno
+                    th(scope="col")
+                        |Apellido Materno
+                    th(scope="col")
+                        |Fecha de Nacimiento
+                    th(scope="col")
+                        |Email
+                    th(scope="col")
                         |Editar
             tbody
                 each val, index in usu
                     tr
-                        th(scope="col")| !{val}
+                        th(scope="col")
+                            input(type="text", class="input", placeholder="Nombre", name="nom", required) !{val}
+                        th(scope="col")| !{nom[index]}
+                        th(scope="col")| !{app[index]}
+                        th(scope="col")| !{apm[index]}
+                        th(scope="col")| !{cor[index]}  
                         th(scope="col", class="rowIMG")
                             a(href="/editarUsu")
                                 img(src="img/editar.png", alt="Editar Usuario", class="imgEdit")
