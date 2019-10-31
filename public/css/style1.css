@@ -224,3 +224,16 @@ main{
 .rowIMG{
   width: 12em;
 }
+.widthEdit{
+  width: 3em
+}
+.widthID{
+  width: 3em
+}
+.widthUS{
+  width: 8em
+}
+.btnEDIT{
+  background-image: url(/public/img/editar.png);
+  border: 0;
+}
