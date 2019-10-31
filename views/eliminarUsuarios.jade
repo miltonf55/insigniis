@@ -10,14 +10,15 @@ block main
                     th(scope="col")
                         |Nombre de Usuario
                     th(scope="col")
-                        |Editar
+                        |Eliminar
             tbody
                 each val, index in usu
                     tr
-                        form(action="/killUsu", method="get")
+                        form(action="/killUsu", method="post")
                             th(scope="col")
                                 input(type="text", class="form-control widthID", placeholder="ID", value=id[index], name="id", readonly="readonly")
                             th(scope="col")| !{val}
                             th(scope="col", class="rowIMG")
-                                input(type="image", name="botondeenvio", src="public\img\editar.png", alt="Editar")
+                                button(type="submit" class="btn btn-outline-danger")
+                                    |Eliminar
                                     

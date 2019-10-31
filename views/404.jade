@@ -1,0 +1,10 @@
+extends ./basic.jade
+block titulo
+    title Error 404
+block style 
+    link(rel="stylesheet", type="text/css", media="screen", href="css/erro.css")
+block cuerpo
+    h1
+        | !{txt} 
+        span(class="badge badge-secondary")
+            |404
