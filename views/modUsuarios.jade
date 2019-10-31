@@ -6,6 +6,8 @@ block main
             thead
                 tr
                     th(scope="col")
+                        |ID
+                    th(scope="col")
                         |Nombre de Usuario
                     th(scope="col")
                         |Nombre
@@ -14,21 +16,26 @@ block main
                     th(scope="col")
                         |Apellido Materno
                     th(scope="col")
-                        |Fecha de Nacimiento
-                    th(scope="col")
                         |Email
                     th(scope="col")
                         |Editar
             tbody
                 each val, index in usu
                     tr
-                        th(scope="col")
-                            input(type="text", class="input", placeholder="Nombre", name="nom", required) !{val}
-                        th(scope="col")| !{nom[index]}
-                        th(scope="col")| !{app[index]}
-                        th(scope="col")| !{apm[index]}
-                        th(scope="col")| !{cor[index]}  
-                        th(scope="col", class="rowIMG")
-                            a(href="/editarUsu")
-                                img(src="img/editar.png", alt="Editar Usuario", class="imgEdit")
+                        form(action="/editarUsu", method="post")
+                            th(scope="col")
+                                input(type="text", class="form-control widthID", placeholder="ID", value=id[index], name="id", readonly="readonly")
+                            th(scope="col")
+                                input(type="text", class="form-control widthUS", placeholder="Usuario", value=val, name="usu", required)
+                            th(scope="col")
+                                input(type="text",class="form-control widthUS", placeholder="Nombre", value=nom[index], name="nom", required)
+                            th(scope="col")
+                                input(type="text",class="form-control widthUS", placeholder="Apellido Paterno", value=app[index], name="app", required)
+                            th(scope="col")
+                                input(type="text",class="form-control widthUS", placeholder="Apellido Materno", value=apm[index], name="apm", required)
+                            th(scope="col")
+                                input(type="text",class="form-control", placeholder="Nombre", value=cor[index], name="dino", required)
+                            th(scope="col", class="rowIMG widthEdit")
+                                input(type="image", name="botondeenvio", src="public\img\editar.png", alt="Editar")
+                                    
         

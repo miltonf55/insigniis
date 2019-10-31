@@ -2,4 +2,22 @@ extends ./menuAd.jade
 block main
     main
         h1 Eliminar Usuarios
-        
+        table(class="table table-striped")
+            thead
+                tr
+                    th(scope="col")
+                        |ID
+                    th(scope="col")
+                        |Nombre de Usuario
+                    th(scope="col")
+                        |Editar
+            tbody
+                each val, index in usu
+                    tr
+                        form(action="/killUsu", method="get")
+                            th(scope="col")
+                                input(type="text", class="form-control widthID", placeholder="ID", value=id[index], name="id", readonly="readonly")
+                            th(scope="col")| !{val}
+                            th(scope="col", class="rowIMG")
+                                input(type="image", name="botondeenvio", src="public\img\editar.png", alt="Editar")
+                                    
