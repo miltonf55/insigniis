@@ -143,25 +143,49 @@ app.get('/modUsuAd', function(req, res) {
 		res.render('index');
 	}
 });
+app.post('/editarUsu', function(req, res) {
+	if (req.session.loggedin) {
+		let id=req.body.id
+		let nom=req.body.nom
+		let app=req.body.app
+		let apm=req.body.apm
+		let mail=req.body.dino
+		let usu=req.body.usu
+		res.render('homeAd')
+		con.query('UPDATE usuario SET nom_usu="'+nom+'", app_usu="'+app+'", apm_usu="'+apm+'", usu_usu="'+usu+'", cor_usu="'+mail+'" WHERE id_usu="'+id+'"',(err,respuesta,fields)=> {
+			if(err)return console.log('ERROR',err)	
+		})
+	} else {
+		res.render('index');
+	}
+	res.end();
+});
 app.get('/elUsuAd', function(req, res) {
 	//let main= req.body.getElementById('main');
 	console.log('Entro un admon');
 	res
 	if (req.session.loggedin) {
 		getUsuarios(function (err,data){
-				nom = data.map(obj => obj.nom_usu);
-				app = data.map(obj => obj.app_usu);
-				apm = data.map(obj => obj.apm_usu);
-				cor = data.map(obj => obj.cor_usu);
+				id = data.map(obj => obj.id_usu);
 				usu = data.map(obj => obj.usu_usu);
-				var usuarios=[nom, app, apm, cor, usu];
-				console.log('Hasta aquí ok')
-				res.render('eliminarUsuarios', {nom, app, apm, cor, usu});
+				res.render('eliminarUsuarios', {id, usu});
 		});
 				
 	} else {
 		res.render('index');
 	}
+});
+app.post('/editarUsu', function(req, res) {
+	if (req.session.loggedin) {
+		let id=req.body.id
+		res.render('homeAd')
+		con.query('UPDATE usuario SET nom_usu="'+nom+'", app_usu="'+app+'", apm_usu="'+apm+'", usu_usu="'+usu+'", cor_usu="'+mail+'" WHERE id_usu="'+id+'"',(err,respuesta,fields)=> {
+			if(err)return console.log('ERROR',err)	
+		})
+	} else {
+		res.render('index');
+	}
+	res.end();
 });
 
 function getUsuarios(callback) {
