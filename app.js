@@ -105,10 +105,8 @@ app.get('/home', function(req, res) {
 	res.end();
 });
 app.get('/verUsuAd', function(req, res) {
-	//let main= req.body.getElementById('main');
-	console.log('Entro un admon');
 	res
-	if (req.session.loggedin) {
+	if (req.session.loggedin && req.session.username=='admon') {
 		getUsuarios(function (err,data){
 				nom = data.map(obj => obj.nom_usu);
 				app = data.map(obj => obj.app_usu);
@@ -125,10 +123,8 @@ app.get('/verUsuAd', function(req, res) {
 	}
 });
 app.get('/modUsuAd', function(req, res) {
-	//let main= req.body.getElementById('main');
-	console.log('Entro un admon');
 	res
-	if (req.session.loggedin) {
+	if (req.session.loggedin && req.session.username=='admon') {
 		getUsuarios(function (err,data){
 				id = data.map(obj => obj.id_usu);
 				nom = data.map(obj => obj.nom_usu);
@@ -144,14 +140,15 @@ app.get('/modUsuAd', function(req, res) {
 	}
 });
 app.post('/editarUsu', function(req, res) {
-	if (req.session.loggedin) {
+	if (req.session.loggedin && req.session.username=='admon') {
 		let id=req.body.id
 		let nom=req.body.nom
 		let app=req.body.app
 		let apm=req.body.apm
 		let mail=req.body.dino
 		let usu=req.body.usu
-		res.render('homeAd')
+		let txt='Usuario actualizado'
+		res.render('exito', {txt})
 		con.query('UPDATE usuario SET nom_usu="'+nom+'", app_usu="'+app+'", apm_usu="'+apm+'", usu_usu="'+usu+'", cor_usu="'+mail+'" WHERE id_usu="'+id+'"',(err,respuesta,fields)=> {
 			if(err)return console.log('ERROR',err)	
 		})
@@ -161,10 +158,8 @@ app.post('/editarUsu', function(req, res) {
 	res.end();
 });
 app.get('/elUsuAd', function(req, res) {
-	//let main= req.body.getElementById('main');
-	console.log('Entro un admon');
 	res
-	if (req.session.loggedin) {
+	if (req.session.loggedin && req.session.username=='admon') {
 		getUsuarios(function (err,data){
 				id = data.map(obj => obj.id_usu);
 				usu = data.map(obj => obj.usu_usu);
@@ -175,11 +170,12 @@ app.get('/elUsuAd', function(req, res) {
 		res.render('index');
 	}
 });
-app.post('/editarUsu', function(req, res) {
-	if (req.session.loggedin) {
+app.post('/killUsu', function(req, res) {
+	if (req.session.loggedin && req.session.username=='admon') {
 		let id=req.body.id
-		res.render('homeAd')
-		con.query('UPDATE usuario SET nom_usu="'+nom+'", app_usu="'+app+'", apm_usu="'+apm+'", usu_usu="'+usu+'", cor_usu="'+mail+'" WHERE id_usu="'+id+'"',(err,respuesta,fields)=> {
+		let txt='Usuario eliminado'
+		res.render('exito', {txt})
+		con.query('DELETE FROM usuario WHERE id_usu="'+id+'"',(err,respuesta,fields)=> {
 			if(err)return console.log('ERROR',err)	
 		})
 	} else {
@@ -195,7 +191,7 @@ function getUsuarios(callback) {
     });
 }
 app.get('/homeAd', function(req, res) {
-	if (req.session.loggedin) {
+	if (req.session.loggedin && req.session.username=='admon') {
 		res.render('homeAd.jade');
 				
 	} else {
