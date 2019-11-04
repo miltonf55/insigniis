@@ -80,7 +80,7 @@ app.post('/loginU',(req,res)=> {
 				req.session.loggedin = true;
 				req.session.username = usu;
 				req.session.cookie.maxAge = 60*60;
-				res.end('Haz iniciado sesión correctamente')
+				res.redirect('/home')
 			} else {
 				res.render('warning2');
 			}			
@@ -98,7 +98,7 @@ app.get('/logout', function(req, res) {
 });
 app.get('/home', function(req, res) {
 	if (req.session.loggedin) {
-		res.send('Welcome back, ' + req.session.username + '!');
+		res.render('home');
 	} else {
 		res.render('index');
 	}
