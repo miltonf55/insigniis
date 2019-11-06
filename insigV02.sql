@@ -109,8 +109,8 @@ CREATE TABLE `usuario` (
   `app_usu` varchar(30) NOT NULL,
   `apm_usu` varchar(30) NOT NULL,
   `fec_usu` date NOT NULL,
-  `usu_usu` varchar(30) NOT NULL,
-  `cor_usu` varchar(40) NOT NULL,
+  `usu_usu` varchar(30) NOT NULL UNIQUE,
+  `cor_usu` varchar(40) NOT NULL UNIQUE,
   `pas_usu` varchar(30) NOT NULL,
   PRIMARY KEY (`id_usu`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
