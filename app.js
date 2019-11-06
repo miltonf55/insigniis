@@ -25,7 +25,7 @@ app.use(bodyParser.urlencoded({
 	extended:true
 }))
 
-app.use(express.static('public'));
+app.use(express.static('public')); 
 app.get('/', (req,res)=>{
 	if (req.session.loggedin) {
 		if(req.session.username=='admon'){
@@ -50,17 +50,26 @@ app.post('/agregarUsuario',(req,res) => {
 	let usu=req.body.usu
 	let pass=req.body.pass
 	let pass2=req.body.pass2
-	if(pass==pass2){
-		con.query('INSERT INTO usuario(`nom_usu`,`app_usu`,`apm_usu`,`fec_usu`,`usu_usu`,`cor_usu`,`pas_usu`) values("'+nom+'","'+app+'","'+apm+'","'+dat+'","'+usu+'","'+mail+'","'+pass+'")',(err,respuesta,fields)=> {
+	let txt;
+	try {
+		if(pass==pass2){
+			con.query('INSERT INTO usuario(`nom_usu`,`app_usu`,`apm_usu`,`fec_usu`,`usu_usu`,`cor_usu`,`pas_usu`) values("'+nom+'","'+app+'","'+apm+'","'+dat+'","'+usu+'","'+mail+'","'+pass+'")',(err,respuesta,fields)=> {
+				txt='Usuario y/o correo ya registrados';
+				if(err)return res.render('warning', {txt})
+				res.render('succesRe');
+			})
+		}
+		else{
+			txt='Las contraseñas no coinciden'
+			res.render('warning', {txt});		
+		}
+	} catch (error) {
+		console.log(error);
+		txt='Hubo un error, vuelva a intentarlo más tarde';
+		res.render('warning', {txt});
+	}
+		
 	
-			if(err)return console.log('ERROR',err)
-			res.render('succesRe')
-			//res.render('seccesRe');
-		})
-	}
-	else{
-		res.render('warning');		
-	}
 	
 });
 
