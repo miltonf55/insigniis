@@ -214,6 +214,7 @@ app.get('/modDel', function(req, res) {
 	res
 	if (req.session.loggedin && req.session.username=='admon') {
 		getUsuarios(function (err,data){
+				id = data.map(obj => obj.id_usu);
 				nom = data.map(obj => obj.nom_usu);
 				app = data.map(obj => obj.app_usu);
 				apm = data.map(obj => obj.apm_usu);
@@ -221,7 +222,7 @@ app.get('/modDel', function(req, res) {
 				usu = data.map(obj => obj.usu_usu);
 				fec = data.map(obj => obj.fec_usu);
 				var usuarios=[nom, app, apm, cor, usu];
-				res.render('verUsuarios', {nom, app, apm, cor, usu, fec});
+				res.render('modDelitos', {id, nom, app, apm, cor, usu, fec});
 		});
 				
 	} else {
@@ -233,6 +234,7 @@ app.get('/addDel', function(req, res) {
 	res
 	if (req.session.loggedin && req.session.username=='admon') {
 		getUsuarios(function (err,data){
+				id = data.map(obj => obj.id_usu);
 				nom = data.map(obj => obj.nom_usu);
 				app = data.map(obj => obj.app_usu);
 				apm = data.map(obj => obj.apm_usu);
@@ -240,7 +242,7 @@ app.get('/addDel', function(req, res) {
 				usu = data.map(obj => obj.usu_usu);
 				fec = data.map(obj => obj.fec_usu);
 				var usuarios=[nom, app, apm, cor, usu];
-				res.render('verUsuarios', {nom, app, apm, cor, usu, fec});
+				res.render('addDelitos', {id, nom, app, apm, cor, usu, fec});
 		});
 				
 	} else {
