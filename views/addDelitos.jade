@@ -1,0 +1,42 @@
+extends ./menuAd.jade
+block main
+    main
+        h1 Modificar Usuarios
+        table(class="table table-striped")
+            thead
+                tr
+                    th(scope="col")
+                        |ID
+                    th(scope="col")
+                        |Nombre de Usuario
+                    th(scope="col")
+                        |Nombre
+                    th(scope="col")
+                        |Apellido Paterno
+                    th(scope="col")
+                        |Apellido Materno
+                    th(scope="col")
+                        |Email
+                    th(scope="col")
+                        |Editar
+            tbody
+                each val, index in usu
+                    tr
+                        form(action="/editarUsu", method="post")
+                            th(scope="col")
+                                input(type="text", class="form-control widthID", placeholder="ID", value=id[index], name="id", readonly="readonly")
+                            th(scope="col")
+                                input(type="text", class="form-control widthUS", placeholder="Usuario", value=val, name="usu", required)
+                            th(scope="col")
+                                input(type="text",class="form-control widthUS", placeholder="Nombre", value=nom[index], name="nom", required)
+                            th(scope="col")
+                                input(type="text",class="form-control widthUS", placeholder="Apellido Paterno", value=app[index], name="app", required)
+                            th(scope="col")
+                                input(type="text",class="form-control widthUS", placeholder="Apellido Materno", value=apm[index], name="apm", required)
+                            th(scope="col")
+                                input(type="text",class="form-control", placeholder="Nombre", value=cor[index], name="dino", required)
+                            th(scope="col", class="rowIMG widthEdit")
+                                button(type="submit" class="btn btn-outline-warning")
+                                    |Editar
+                                    
+        
