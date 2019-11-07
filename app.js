@@ -88,7 +88,7 @@ app.post('/loginU',(req,res)=> {
 			if (results.length > 0) {
 				req.session.loggedin = true;
 				req.session.username = usu;
-				req.session.cookie.maxAge = 60*60;
+				req.session.cookie.maxAge = 60*60*1000;
 				res.redirect('/home')
 			} else {
 				res.render('warning2');
@@ -185,7 +185,8 @@ app.post('/killUsu', function(req, res) {
 		let txt='Usuario eliminado'
 		res.render('exito', {txt})
 		con.query('DELETE FROM usuario WHERE id_usu="'+id+'"',(err,respuesta,fields)=> {
-			if(err)return console.log('ERROR',err)	
+			txt='Hubo un erro al eliminar el dinosaurio'
+			if(err)return res.render('warning', {txt})	
 		})
 	} else {
 		res.render('index');
@@ -208,6 +209,44 @@ app.get('/homeAd', function(req, res) {
 	}
 });
 
+//DELITOS ADMON
+app.get('/modDel', function(req, res) {
+	res
+	if (req.session.loggedin && req.session.username=='admon') {
+		getUsuarios(function (err,data){
+				nom = data.map(obj => obj.nom_usu);
+				app = data.map(obj => obj.app_usu);
+				apm = data.map(obj => obj.apm_usu);
+				cor = data.map(obj => obj.cor_usu);
+				usu = data.map(obj => obj.usu_usu);
+				fec = data.map(obj => obj.fec_usu);
+				var usuarios=[nom, app, apm, cor, usu];
+				res.render('verUsuarios', {nom, app, apm, cor, usu, fec});
+		});
+				
+	} else {
+		res.render('index');
+	}
+});
+
+app.get('/addDel', function(req, res) {
+	res
+	if (req.session.loggedin && req.session.username=='admon') {
+		getUsuarios(function (err,data){
+				nom = data.map(obj => obj.nom_usu);
+				app = data.map(obj => obj.app_usu);
+				apm = data.map(obj => obj.apm_usu);
+				cor = data.map(obj => obj.cor_usu);
+				usu = data.map(obj => obj.usu_usu);
+				fec = data.map(obj => obj.fec_usu);
+				var usuarios=[nom, app, apm, cor, usu];
+				res.render('verUsuarios', {nom, app, apm, cor, usu, fec});
+		});
+				
+	} else {
+		res.render('index');
+	}
+});
 //add the router
 //app.use(express.static(__dirname + '/View'));
 //Store all HTML files in view folder.
