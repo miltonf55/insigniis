@@ -6,22 +6,17 @@ block main
             thead
                 tr
                     th(scope="col")
-                        |ID
-                    th(scope="col")
                         |Tipo de Delito
                     th(scope="col")
                         |+
             tbody
-                each val, index in usu
-                    tr
-                        form(action="/sumDelito", method="post")
-                            th(scope="col")
-                                input(type="text", class="form-control widthID", placeholder="ID", value=id[index], name="id", readonly="readonly")
-                            th(scope="col")
-                                input(type="text", class="form-control widthUS", placeholder="Usuario", value=val, name="usu", required)
-                            th(scope="col", class="rowIMG widthEdit")
-                                button(type="submit" class="btn btn-outline-success")
-                                    |Agregar
+                tr
+                    form(action="/sumDelito", method="post")
+                        th(scope="col")
+                            input(type="text", class="form-control romIMG", placeholder="Delito", name="des", required)
+                        th(scope="col", class="rowIMG widthEdit")
+                            button(type="submit" class="btn btn-outline-success")
+                                |Agregar
         h1 Tipos de Delitos Existentes en la DB
         table(class="table table-striped")
             thead
@@ -34,6 +29,6 @@ block main
                 each val, index in id
                     tr
                         th(scope="col")| !{val}
-                        th(scope="col")| !{app[index]}
+                        th(scope="col")| !{nom[index]}
                                     
         

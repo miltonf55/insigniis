@@ -12,13 +12,13 @@ block main
                     th(scope="col")
                         |Editar
             tbody
-                each val, index in usu
+                each val, index in id
                     tr
-                        form(action="/editarUsu", method="post")
+                        form(action="/editarDel", method="post")
                             th(scope="col")
-                                input(type="text", class="form-control widthID", placeholder="ID", value=id[index], name="id", readonly="readonly")
+                                input(type="text", class="form-control widthID", placeholder="ID", value=val, name="id", readonly="readonly")
                             th(scope="col")
-                                input(type="text", class="form-control widthUS", placeholder="Usuario", value=val, name="usu", required)
+                                input(type="text", class="form-control widthDelMod", placeholder="Usuario", value=nom[index], name="nom", required)
                             th(scope="col", class="rowIMG widthEdit")
                                 button(type="submit" class="btn btn-outline-warning")
                                     |Editar
