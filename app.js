@@ -281,22 +281,32 @@ app.get('/datosUsu', function(req, res) {
 	res
 	if (req.session.loggedin) {
 		let usu=req.session.username;
-		getUsuarios(usu, function (err,data){
+		getDatUsu(usu, function (err,data){
 				nom = data.map(obj => obj.nom_usu);
 				app = data.map(obj => obj.app_usu);
 				apm = data.map(obj => obj.apm_usu);
 				cor = data.map(obj => obj.cor_usu);
 				usu = data.map(obj => obj.usu_usu);
-				fec = data.map(obj => obj.fec_usu);
-				var usuarios=[nom, app, apm, cor, usu];
-				res.render('verUsuarios', {nom, app, apm, cor, usu, fec});
+				res.render('datosUsu', {nom, app, apm, cor, usu});
 		});
 				
 	} else {
 		res.render('index');
 	}
 });
-
+app.get('/modPass', function(req, res) {
+	res
+	if (req.session.loggedin) {
+		let usu=req.session.username;
+		getDatUsu(usu, function (err,data){
+				pas = data.map(obj => obj.pas_usu);
+				res.render('modPass', {pas});
+		});
+				
+	} else {
+		res.render('index');
+	}
+});
 //Callbacks DB
 function getUsuarios(callback) {
     con.query('SELECT * FROM usuario', function(err, rows) {
@@ -311,7 +321,7 @@ function getDelitos(callback) {
 		callback(null, rows);
     });
 }
-function getDelitos(usu, callback) {
+function getDatUsu(usu, callback) {
     con.query('SELECT * FROM usuario where cor_usu=?',[usu], function(err, rows) {
 		if(err) return callback(err);
 		callback(null, rows);
