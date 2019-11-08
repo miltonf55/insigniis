@@ -24,33 +24,6 @@ CREATE DATABASE /*!32312 IF NOT EXISTS*/ `insigniisDB` /*!40100 DEFAULT CHARACTE
 USE `insigniisDB`;
 
 --
--- Table structure for table `contacto`
---
-
-DROP TABLE IF EXISTS `contacto`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `contacto` (
-  `id_con` int(11) NOT NULL AUTO_INCREMENT,
-  `nom_con` varchar(30) DEFAULT NOT NULL,
-  `num_con` varchar(12) DEFAULT NOT NULL,
-  `id_usu` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id_con`),
-  KEY `id_usu` (`id_usu`),
-  CONSTRAINT `contacto_ibfk_1` FOREIGN KEY (`id_usu`) REFERENCES `usuario` (`id_usu`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `contacto`
---
-
-LOCK TABLES `contacto` WRITE;
-/*!40000 ALTER TABLE `contacto` DISABLE KEYS */;
-/*!40000 ALTER TABLE `contacto` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `delegacion`
 --
 
@@ -59,7 +32,7 @@ DROP TABLE IF EXISTS `delegacion`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `delegacion` (
   `id_del` tinyint(2) NOT NULL AUTO_INCREMENT,
-  `nom_del` varchar(60) DEFAULT NOT NULL,
+  `nom_del` varchar(60) NOT NULL,
   PRIMARY KEY (`id_del`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -114,7 +87,7 @@ DROP TABLE IF EXISTS `tipodelito`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tipodelito` (
   `id_tip` tinyint(4) NOT NULL AUTO_INCREMENT,
-  `nom_tip` varchar(60) DEFAULT NOT NULL,
+  `nom_tip` varchar(60) NOT NULL,
   PRIMARY KEY (`id_tip`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -169,4 +142,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-11-06 18:23:58
+-- Dump completed on 2019-11-07 19:24:24
