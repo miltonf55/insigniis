@@ -1,0 +1,25 @@
+extends ./menuU.jade
+block main
+    main
+        h1 Modificar Contraseña
+        table(class="table table-striped")
+            thead
+                tr
+                    th(scope="col")
+                        |Contraseña actual
+                    th(scope="col")| !{pas}
+            tbody
+                tr
+                    th(scope="col")|Nueva Contraseña
+                    th(scope="col")
+                        input(type="password", class="form-control", placeholder="Password", name="pass", required)
+                form(action="/editarPass", method="post")
+                    tr
+                        th(scope="col")|Confirmar Nueva Contraseña
+                        th(scope="col")
+                            input(type="password", class="form-control", placeholder="Confirm Password", name="pass2", required)
+                    tr
+                        th(scope="col")
+                        th(scope="col")
+                            button(type="submit" class="btn btn-success")
+                                |Editar
