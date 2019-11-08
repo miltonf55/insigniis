@@ -76,6 +76,7 @@ app.post('/agregarUsuario',(req,res) => {
 app.post('/loginU',(req,res)=> {
 	let usu=req.body.dino;
 	let pass=req.body.pass;
+	let txt='Usuario y/o contraseña incorrecta';
 	if(usu=='milton@admon.com' && pass=='qwerty'){
 		req.session.loggedin = true;
 		req.session.username = 'admon';
@@ -91,7 +92,7 @@ app.post('/loginU',(req,res)=> {
 				req.session.cookie.maxAge = 60*60*1000;
 				res.redirect('/home')
 			} else {
-				res.render('warning2');
+				res.render('warning', {txt});
 			}			
 		});	
 	}
@@ -159,7 +160,8 @@ app.post('/editarUsu', function(req, res) {
 		let txt='Usuario actualizado'
 		res.render('exito', {txt})
 		con.query('UPDATE usuario SET nom_usu="'+nom+'", app_usu="'+app+'", apm_usu="'+apm+'", usu_usu="'+usu+'", cor_usu="'+mail+'" WHERE id_usu="'+id+'"',(err,respuesta,fields)=> {
-			if(err)return console.log('ERROR',err)	
+			txt='Hubo un error, vuelva a intentarlo más tarde';
+			if(err)return res.render('warning2', {txt})	
 		})
 	} else {
 		res.render('index');
@@ -186,7 +188,7 @@ app.post('/killUsu', function(req, res) {
 		res.render('exito', {txt})
 		con.query('DELETE FROM usuario WHERE id_usu="'+id+'"',(err,respuesta,fields)=> {
 			txt='Hubo un erro al eliminar el dinosaurio'
-			if(err)return res.render('warning', {txt})	
+			if(err)return res.render('warning2', {txt})	
 		})
 	} else {
 		res.render('index');
@@ -194,12 +196,7 @@ app.post('/killUsu', function(req, res) {
 	res.end();
 });
 
-function getUsuarios(callback) {
-    con.query('SELECT * FROM usuario', function(err, rows) {
-		if(err) return callback(err);
-		callback(null, rows);
-    });
-}
+
 app.get('/homeAd', function(req, res) {
 	if (req.session.loggedin && req.session.username=='admon') {
 		res.render('homeAd.jade');
@@ -211,18 +208,11 @@ app.get('/homeAd', function(req, res) {
 
 //DELITOS ADMON
 app.get('/modDel', function(req, res) {
-	res
 	if (req.session.loggedin && req.session.username=='admon') {
-		getUsuarios(function (err,data){
-				id = data.map(obj => obj.id_usu);
-				nom = data.map(obj => obj.nom_usu);
-				app = data.map(obj => obj.app_usu);
-				apm = data.map(obj => obj.apm_usu);
-				cor = data.map(obj => obj.cor_usu);
-				usu = data.map(obj => obj.usu_usu);
-				fec = data.map(obj => obj.fec_usu);
-				var usuarios=[nom, app, apm, cor, usu];
-				res.render('modDelitos', {id, nom, app, apm, cor, usu, fec});
+		getDelitos(function (err,data){
+			id = data.map(obj => obj.id_tip);
+			nom = data.map(obj => obj.nom_tip);
+			res.render('modDelitos', {id, nom});
 		});
 				
 	} else {
@@ -233,8 +223,65 @@ app.get('/modDel', function(req, res) {
 app.get('/addDel', function(req, res) {
 	res
 	if (req.session.loggedin && req.session.username=='admon') {
-		getUsuarios(function (err,data){
-				id = data.map(obj => obj.id_usu);
+		getDelitos(function (err,data){
+				id = data.map(obj => obj.id_tip);
+				nom = data.map(obj => obj.nom_tip);
+				res.render('addDelitos', {id, nom});
+		});
+				
+	} else {
+		res.render('index');
+	}
+});
+
+app.post('/sumDelito',(req,res) => {
+	if (req.session.loggedin && req.session.username=='admon') {
+		let des=req.body.des
+		let txt='Delito Agregado'
+		res.render('exito', {txt})
+		try {
+				con.query('INSERT INTO tipodelito(`nom_tip`) values("'+des+'")',(err,respuesta,fields)=> {
+					txt='Hubo un error, vuelva a intentarlo más tarde';
+					if(err)return res.render('warning2', {txt})
+					res.render('succesRe');
+				})
+		} catch (error) {
+			console.log(error);
+			txt='Hubo un error, vuelva a intentarlo más tarde';
+			res.render('warning2', {txt});
+		}	
+	} else {
+		res.render('index');
+	}
+});
+app.post('/editarDel', function(req, res) {
+	if (req.session.loggedin && req.session.username=='admon') {
+		let id=req.body.id
+		let nom=req.body.nom
+		let txt='Delito actualizado'
+		res.render('exito', {txt})
+		con.query('UPDATE tipodelito SET nom_tip="'+nom+'" WHERE id_tip="'+id+'"',(err,respuesta,fields)=> {
+			txt='Hubo un error, vuelva a intentarlo más tarde';
+			if(err)return res.render('warning2', {txt})	
+		})
+	} else {
+		res.render('index');
+	}
+	res.end();
+});
+//add the router
+//app.use(express.static(__dirname + '/View'));
+//Store all HTML files in view folder.
+//app.use(express.static(__dirname + '/Script'));
+//Store all JS and CSS in Scripts folder.
+
+//PART USER
+
+app.get('/datosUsu', function(req, res) {
+	res
+	if (req.session.loggedin) {
+		let usu=req.session.username;
+		getUsuarios(usu, function (err,data){
 				nom = data.map(obj => obj.nom_usu);
 				app = data.map(obj => obj.app_usu);
 				apm = data.map(obj => obj.apm_usu);
@@ -242,18 +289,34 @@ app.get('/addDel', function(req, res) {
 				usu = data.map(obj => obj.usu_usu);
 				fec = data.map(obj => obj.fec_usu);
 				var usuarios=[nom, app, apm, cor, usu];
-				res.render('addDelitos', {id, nom, app, apm, cor, usu, fec});
+				res.render('verUsuarios', {nom, app, apm, cor, usu, fec});
 		});
 				
 	} else {
 		res.render('index');
 	}
 });
-//add the router
-//app.use(express.static(__dirname + '/View'));
-//Store all HTML files in view folder.
-//app.use(express.static(__dirname + '/Script'));
-//Store all JS and CSS in Scripts folder.
+
+//Callbacks DB
+function getUsuarios(callback) {
+    con.query('SELECT * FROM usuario', function(err, rows) {
+		if(err) return callback(err);
+		callback(null, rows);
+    });
+}
+
+function getDelitos(callback) {
+    con.query('SELECT * FROM tipodelito', function(err, rows) {
+		if(err) return callback(err);
+		callback(null, rows);
+    });
+}
+function getDelitos(usu, callback) {
+    con.query('SELECT * FROM usuario where cor_usu=?',[usu], function(err, rows) {
+		if(err) return callback(err);
+		callback(null, rows);
+    });
+}
 app.listen(3030,()=>{
 	console.log('Servidor escuchando en el puerto 3030')
 })
