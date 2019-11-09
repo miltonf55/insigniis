@@ -307,6 +307,48 @@ app.get('/modPass', function(req, res) {
 		res.render('index');
 	}
 });
+app.get('/addReporte', function(req, res) {
+	res
+	if (req.session.loggedin) {
+		let usu=req.session.username;
+		getDelegaciones(function (err,data){
+				del = data.map(obj => obj.nom_del);
+				id = data.map(obj => obj.id_del);
+				getDelitos(function (err,data){
+					delito = data.map(obj => obj.nom_tip);
+					idD = data.map(obj => obj.id_tip);
+					res.render('agregarRep', {id,del});
+				});
+		});		
+	} else {
+		res.render('index');
+	}
+});
+app.post('/editarPass', function(req, res) {
+	if (req.session.loggedin) {
+		let user=req.session.username;
+		let pass=req.body.pass;
+		let pass2=req.body.pass2;
+		console.log(pass)
+		if(pass==pass2){
+			let txt='Contraseña actualizada'
+			res.render('exitoU', {txt})
+			con.query('UPDATE usuario SET pas_usu="'+pass+'" WHERE cor_usu="'+user+'"',(err,respuesta,fields)=> {
+				txt='Hubo un error, vuelva a intentarlo más tarde';
+				if(err)return res.render('errorU', {txt})	
+			})
+		}
+		else{
+			txt='Las constraseñas no coinciden, vuelva a intentarlo';
+			res.render('errorU', {txt})
+		}
+		
+	} else {
+		res.render('index');
+	}
+	res.end();
+});
+
 //Callbacks DB
 function getUsuarios(callback) {
     con.query('SELECT * FROM usuario', function(err, rows) {
@@ -314,7 +356,6 @@ function getUsuarios(callback) {
 		callback(null, rows);
     });
 }
-
 function getDelitos(callback) {
     con.query('SELECT * FROM tipodelito', function(err, rows) {
 		if(err) return callback(err);
@@ -327,6 +368,13 @@ function getDatUsu(usu, callback) {
 		callback(null, rows);
     });
 }
+function getDelegaciones(callback) {
+    con.query('SELECT * FROM delegacion', function(err, rows) {
+		if(err) return callback(err);
+		callback(null, rows);
+    });
+}
+
 app.listen(3030,()=>{
 	console.log('Servidor escuchando en el puerto 3030')
 })
