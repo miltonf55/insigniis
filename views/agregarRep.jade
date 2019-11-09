@@ -1,0 +1,25 @@
+extends ./menuU.jade
+block main
+    main
+        h1 Agregar reporte
+        form
+            div.form-group
+                label(for="exampleFormControlSelect1")|Tipo de Delito
+                select(class="form-control", id="exampleFormControlSelect1", name="delito")
+                    option
+                        |1
+                    option
+                        |2
+                    option
+                        |3
+            div.form-group
+                label(for="exampleFormControlSelect1")|Delegación donde ocurrio
+                select(class="form-control", id="exampleFormControlSelect1", name="delegacion")
+                    each val, index in id
+                        option(value=val)
+                            | !{del[index]}
+            div.form-group
+                label(for="exampleFormControlSelect1")|Descripción de como ocurrio
+                textarea(class="form-control", id="exampleFormControlTextarea1", rows="3", maxlength=255, placeholder="Descripción, maximo 255 caracteres")
+            button(type="submit" class="btn btn-success")
+                                    |Agregar

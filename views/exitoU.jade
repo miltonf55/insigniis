@@ -1,0 +1,7 @@
+extends ./home.jade
+block alerts
+    div(class='alert alert-success', role='success')
+        | !{txt}
+        button(type='button', class='close', data-dismiss='alert', aria-label='Close')
+            span(aria-hidden='true')
+                |&times;

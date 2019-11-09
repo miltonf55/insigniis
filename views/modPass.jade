@@ -9,11 +9,11 @@ block main
                         |Contraseña actual
                     th(scope="col")| !{pas}
             tbody
-                tr
-                    th(scope="col")|Nueva Contraseña
-                    th(scope="col")
-                        input(type="password", class="form-control", placeholder="Password", name="pass", required)
                 form(action="/editarPass", method="post")
+                    tr
+                        th(scope="col")|Nueva Contraseña
+                        th(scope="col")
+                            input(type="password", class="form-control", placeholder="Password", name="pass", required)
                     tr
                         th(scope="col")|Confirmar Nueva Contraseña
                         th(scope="col")
