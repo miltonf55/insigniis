@@ -1,6 +1,6 @@
 extends ./basic.jade
 block titulo
-    title Ver Usuarios
+    block title
 block style 
     link(rel="stylesheet", type="text/css", media="screen", href="css/style1.css")
 block cuerpo
@@ -26,7 +26,7 @@ block cuerpo
                         a(href="/addReporte")
                             |Agregar Reporte
                     li.menu-item
-                        a(href="/usuReporte")
+                        a(href="/reportesUsuario")
                             |Mis Reportes
             li.menu-item
                 a(href="#")
@@ -43,10 +43,10 @@ block cuerpo
                     |Ayuda
                 ol.sub-menu
                     li.menu-item
-                        a(href="contacto")
+                        a(href="/contacto")
                             |Contacto
                     li.menu-item
-                        a(href="aviso")
+                        a(href="/aviso")
                             |Aviso de Privacidad
             li.menu-item
                 a(href="/logout")

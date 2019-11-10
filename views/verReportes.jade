@@ -1,0 +1,17 @@
+extends ./menuU.jade
+block title
+    | !{txt}
+block main
+    main
+        h1 !{txt}
+        each val, index in des
+            div.jumbotron
+                h2.display-6
+                    |Delito: !{delito[index]}
+                hr.my-4
+                p
+                    |Delegación: !{del[index]}
+                hr.my-4
+                label(for="exampleFormControlSelect1" class="lead")|Descripción de como ocurrio:
+                p
+                    | !{val}
