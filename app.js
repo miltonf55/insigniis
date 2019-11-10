@@ -115,7 +115,6 @@ app.get('/home', function(req, res) {
 	res.end();
 });
 app.get('/verUsuAd', function(req, res) {
-	res
 	if (req.session.loggedin && req.session.username=='admon') {
 		getUsuarios(function (err,data){
 				nom = data.map(obj => obj.nom_usu);
@@ -133,7 +132,6 @@ app.get('/verUsuAd', function(req, res) {
 	}
 });
 app.get('/modUsuAd', function(req, res) {
-	res
 	if (req.session.loggedin && req.session.username=='admon') {
 		getUsuarios(function (err,data){
 				id = data.map(obj => obj.id_usu);
@@ -169,7 +167,6 @@ app.post('/editarUsu', function(req, res) {
 	res.end();
 });
 app.get('/elUsuAd', function(req, res) {
-	res
 	if (req.session.loggedin && req.session.username=='admon') {
 		getUsuarios(function (err,data){
 				id = data.map(obj => obj.id_usu);
@@ -221,7 +218,6 @@ app.get('/modDel', function(req, res) {
 });
 
 app.get('/addDel', function(req, res) {
-	res
 	if (req.session.loggedin && req.session.username=='admon') {
 		getDelitos(function (err,data){
 				id = data.map(obj => obj.id_tip);
@@ -276,9 +272,31 @@ app.post('/editarDel', function(req, res) {
 //Store all JS and CSS in Scripts folder.
 
 //PART USER
-
+app.get('/contacto', function(req, res) {
+	if (req.session.loggedin) {
+		let usu=req.session.username;
+		getDatUsu(usu, function (err,data){
+				pas = data.map(obj => obj.pas_usu);
+				res.render('modPass', {pas});
+		});
+				
+	} else {
+		res.render('index');
+	}
+});
+app.get('/aviso', function(req, res) {
+	if (req.session.loggedin) {
+		let usu=req.session.username;
+		getDatUsu(usu, function (err,data){
+				pas = data.map(obj => obj.pas_usu);
+				res.render('modPass', {pas});
+		});
+				
+	} else {
+		res.render('index');
+	}
+});
 app.get('/datosUsu', function(req, res) {
-	res
 	if (req.session.loggedin) {
 		let usu=req.session.username;
 		getDatUsu(usu, function (err,data){
@@ -295,7 +313,6 @@ app.get('/datosUsu', function(req, res) {
 	}
 });
 app.get('/modPass', function(req, res) {
-	res
 	if (req.session.loggedin) {
 		let usu=req.session.username;
 		getDatUsu(usu, function (err,data){
@@ -308,7 +325,6 @@ app.get('/modPass', function(req, res) {
 	}
 });
 app.get('/addReporte', function(req, res) {
-	res
 	if (req.session.loggedin) {
 		let usu=req.session.username;
 		getDelegaciones(function (err,data){
@@ -317,9 +333,41 @@ app.get('/addReporte', function(req, res) {
 				getDelitos(function (err,data){
 					delito = data.map(obj => obj.nom_tip);
 					idD = data.map(obj => obj.id_tip);
-					res.render('agregarRep', {id,del});
+					res.render('agregarRep', {id,del, delito, idD});
 				});
 		});		
+	} else {
+		res.render('index');
+	}
+});
+app.get('/verReportes', function(req, res) {
+	if (req.session.loggedin) {
+		let usu=req.session.username;
+		getReportes(function (err,data){
+				des = data.map(obj => obj.des_rep);
+				del = data.map(obj => obj.nom_del);
+				delito = data.map(obj => obj.nom_tip);
+				txt='Ver Reportes';
+				res.render('verReportes', {des,del,delito, txt});
+		});		
+	} else {
+		res.render('index');
+	}
+});
+app.get('/reportesUsuario', function(req, res) {
+	if (req.session.loggedin) {
+		let usu=req.session.username;
+		getDatUsu(usu, function (err,data){
+				id = data.map(obj => obj.id_usu);
+				getReportesU(id, function (err,data){
+					des = data.map(obj => obj.des_rep);
+					del = data.map(obj => obj.nom_del);
+					delito = data.map(obj => obj.nom_tip);
+					txt='Mis Reportes';
+					res.render('verReportes', {des,del,delito, txt});
+				});	
+		});
+			
 	} else {
 		res.render('index');
 	}
@@ -329,7 +377,6 @@ app.post('/editarPass', function(req, res) {
 		let user=req.session.username;
 		let pass=req.body.pass;
 		let pass2=req.body.pass2;
-		console.log(pass)
 		if(pass==pass2){
 			let txt='Contraseña actualizada'
 			res.render('exitoU', {txt})
@@ -348,6 +395,27 @@ app.post('/editarPass', function(req, res) {
 	}
 	res.end();
 });
+app.post('/sumReporte', function(req, res) {
+	if (req.session.loggedin) {
+		let usu=req.session.username;
+		let delito=req.body.delito;
+		let del=req.body.delegacion;
+		let des=req.body.des;
+		console.log(delito)
+		let txt='Reporte agregado'
+		res.render('exitoU', {txt})
+		getDatUsu(usu, function (err,data){
+			idU = data.map(obj => obj.id_usu);
+			con.query('INSERT INTO reporte(`des_rep`,`id_tip`,`id_del`,`id_usu`) values("'+des+'","'+delito+'","'+del+'","'+idU+'")',(err,respuesta,fields)=> {
+				txt='Hubo un error, vuelva a intentarlo más tarde';
+				if(err)return res.render('errorU', {txt})	
+			});
+		});
+	} else {
+		res.render('index');
+	}
+	res.end();
+});
 
 //Callbacks DB
 function getUsuarios(callback) {
@@ -357,7 +425,7 @@ function getUsuarios(callback) {
     });
 }
 function getDelitos(callback) {
-    con.query('SELECT * FROM tipodelito', function(err, rows) {
+    con.query('SELECT * FROM tipodelito ORDER BY nom_tip', function(err, rows) {
 		if(err) return callback(err);
 		callback(null, rows);
     });
@@ -370,6 +438,18 @@ function getDatUsu(usu, callback) {
 }
 function getDelegaciones(callback) {
     con.query('SELECT * FROM delegacion', function(err, rows) {
+		if(err) return callback(err);
+		callback(null, rows);
+    });
+}
+function getReportes(callback) {
+    con.query('SELECT id_rep, des_rep, nom_tip, nom_del FROM reporte INNER JOIN tipodelito ON reporte.id_tip=tipodelito.id_tip INNER JOIN delegacion ON reporte.id_del=delegacion.id_del ORDER BY id_rep DESC LIMIT 15', function(err, rows) {
+		if(err) return callback(err);
+		callback(null, rows);
+    });
+}
+function getReportesU(id, callback) {
+    con.query('SELECT id_rep, des_rep, nom_tip, nom_del FROM reporte INNER JOIN tipodelito ON reporte.id_tip=tipodelito.id_tip INNER JOIN delegacion ON reporte.id_del=delegacion.id_del where id_usu=? ORDER BY id_rep DESC LIMIT 15', [id],function(err, rows) {
 		if(err) return callback(err);
 		callback(null, rows);
     });

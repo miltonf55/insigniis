@@ -99,6 +99,7 @@ CREATE TABLE `tipodelito` (
 
 LOCK TABLES `tipodelito` WRITE;
 /*!40000 ALTER TABLE `tipodelito` DISABLE KEYS */;
+INSERT INTO tipodelito (nom_tip) VALUES ('Violencia Familiar'), ('Robo de objetos'), ('Fraude'), ('Amenazas'), ('Daño en propiedad ajena intencional'), ('Usurpación de identidad'), ('Abuso Sexual'), ('Abuso de autoridad'), ('Extorsión'), ('Sustracción de menores'), ('Encubrimiento'), ('Abandono de persona'), ('Allanamiento de morada'), ('Narcomenudeo'), ('Tortura'), ('Lesiones Culposas'), ('Privación de la libertad personal'), ('Delitos Ambientales'), ('Acoso Sexual'), ('Tentativa de robo'), ('Maltrato Animal'), ('Portación de arma de fuego'), ('Corrupción de menores'), ('Disparos de arma de fuego'), ('Trata de personas'), ('Pornografia Infantil'), ('Tentativa de homicidio'), ('Robo'), ('Homicidio');
 /*!40000 ALTER TABLE `tipodelito` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -121,7 +122,7 @@ CREATE TABLE `usuario` (
   PRIMARY KEY (`id_usu`),
   UNIQUE KEY `usu_usu` (`usu_usu`),
   UNIQUE KEY `cor_usu` (`cor_usu`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -130,7 +131,7 @@ CREATE TABLE `usuario` (
 
 LOCK TABLES `usuario` WRITE;
 /*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
-INSERT INTO `usuario` VALUES (2,'Bryann Milton','Ocampo','Vazquez ','2001-09-24','miltonf55','miltonf55@hotmail.com','qwerty');
+INSERT INTO `usuario` VALUES (1,'Bryann Milton','Ocampo','Vazquez ','2001-09-24','miltonf55','miltonf55@hotmail.com','qwerty');
 /*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
