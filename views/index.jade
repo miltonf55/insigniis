@@ -12,14 +12,14 @@ block cuerpo
 					span o 
 					|Registrarse
 				div.form-holder
-					input(type="text", class="input", placeholder="Nombre", name="nom", required)
-					input(type="text",class="input", placeholder="Apellido Paterno", name="app", required)
-					input(type="text", class="input", placeholder="Apellido Materno", name="apm",required)
-					input(type="date", class="input", placeholder="Fecha de Nacimiento", name="dat", required)
-					input(type="email", class="input", placeholder="Email", name="dino", required)
-					input(type="text", class="input", placeholder="Usuario", name="usu", required)
-					input(type="password", class="input", placeholder="Password", name="pass", required)
-					input(type="password", class="input", placeholder="Confirm Password", name="pass2", required)
+					input(type="text", class="input", placeholder="Nombre", name="nom", maxlength=20,required)
+					input(type="text",class="input", placeholder="Apellido Paterno", name="app", maxlength=20, required)
+					input(type="text", class="input", placeholder="Apellido Materno", name="apm",maxlength=20, required)
+					input(type="date", class="input", placeholder="Fecha de Nacimiento", name="dat", value="2000-01-01", min="1950-01-01", max="2015-01-01",required)
+					input(type="email", class="input", placeholder="Email", name="dino", maxlength=30, required)
+					input(type="text", class="input", placeholder="Usuario", name="usu", maxlength=30,required)
+					input(type="password", class="input", placeholder="Password", name="pass", maxlength=30, minlength=6, required)
+					input(type="password", class="input", placeholder="Confirm Password", name="pass2", maxlength=30, required)
 					button(class="submit-btn")
 						| Registrarse
 		div.login

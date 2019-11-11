@@ -19,6 +19,6 @@ block main
                             | !{del[index]}
             div.form-group
                 label(for="exampleFormControlSelect1")|Descripción de como ocurrio
-                textarea(class="form-control", id="exampleFormControlTextarea1", rows="3", maxlength=255, placeholder="Descripción, maximo 255 caracteres", name="des", required)
+                textarea(class="form-control", id="exampleFormControlTextarea1", rows="3", maxlength=255, minlength=4, placeholder="Descripción, maximo 255 caracteres", name="des", required)
             button(type="submit" class="btn btn-success")
                                     |Agregar
