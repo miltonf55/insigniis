@@ -57,8 +57,12 @@ app.post('/agregarUsuario',(req,res) => {
 			if (alphaNumC(usu)&&alphaNumC(pass)) {
 				if(correo(usu) && fecha(dat)){
 					if(pass==pass2){
-						
-						con.query('INSERT INTO usuario(`nom_usu`,`app_usu`,`apm_usu`,`fec_usu`,`usu_usu`,`cor_usu`,`pas_usu`) values("'+nom+'","'+app+'","'+apm+'","'+dat+'","'+usu+'","'+mail+'","'+pass+'")',(err,respuesta,fields)=> {
+						nomC=cifrar(nom);
+						appC=cifrar(app);
+						apmC=cifrar(apm);
+						usuC=cifrar(usu);
+						pasC=cifrar(pass);
+						con.query('INSERT INTO usuario(`nom_usu`,`app_usu`,`apm_usu`,`fec_usu`,`usu_usu`,`cor_usu`,`pas_usu`) values("'+nomC+'","'+appC+'","'+apmC+'","'+dat+'","'+usuC+'","'+mail+'","'+pasC+'")',(err,respuesta,fields)=> {
 							txt='Usuario y/o correo ya registrados';
 							if(err)return res.render('warning', {txt})
 							res.render('succesRe');
@@ -103,22 +107,26 @@ app.post('/loginU',(req,res)=> {
 		txt='Correo Invalido';
 		if(correo(usu)){
 			txt='Usuario y/o contraseña incorrecta';
-			if(usu=='milton@admon.com' && pass=='qwerty'){
+			if(usu=='milton@admon.com' && pass=='DarlingInTheFranxx002'){
 				req.session.loggedin = true;
 				req.session.username = 'admon';
 				req.session.cookie.maxAge = 60*60*1000;
 				res.redirect('/homeAd');
 			}
 			else{
-				//let usuC=cifrar(usu);
-				//decifrar(usuC);
-				con.query('SELECT * FROM usuario WHERE cor_usu = ? AND pas_usu = ?', [usu, pass], function(err, results, fields) {
-					if (err) throw err;
-					if (results.length > 0) {
-						req.session.loggedin = true;
-						req.session.username = usu;
-						req.session.cookie.maxAge = 60*60*1000;
-						res.redirect('/home')
+				loginC(usu, function (err,data){
+					pas=data.map(obj => obj.pas_usu);
+					if (data.length > 0) {
+						pasD=decifrar(pas);
+						if(pasD=pass){
+							req.session.loggedin = true;
+							req.session.username = usu;
+							req.session.cookie.maxAge = 60*60*1000;
+							res.redirect('/home')
+						}
+						else{
+							res.render('warning', {txt});
+						}
 					} else {
 						res.render('warning', {txt});
 					}			
@@ -335,7 +343,11 @@ app.get('/datosUsu', function(req, res) {
 				apm = data.map(obj => obj.apm_usu);
 				cor = data.map(obj => obj.cor_usu);
 				usu = data.map(obj => obj.usu_usu);
-				res.render('datosUsu', {nom, app, apm, cor, usu});
+				nomD=decifrar(nom);
+				appD=decifrar(app);
+				apmD=decifrar(apm);
+				usuD=decifrar(usu);
+				res.render('datosUsu', {nomD, appD, apmD, cor, usuD});
 		});
 				
 	} else {
@@ -347,7 +359,8 @@ app.get('/modPass', function(req, res) {
 		let usu=req.session.username;
 		getDatUsu(usu, function (err,data){
 				pas = data.map(obj => obj.pas_usu);
-				res.render('modPass', {pas});
+				pasD=decifrar(pas);
+				res.render('modPass', {pasD});
 		});
 				
 	} else {
@@ -411,7 +424,8 @@ app.post('/editarPass', function(req, res) {
 			if(pass==pass2){
 				let txt='Contraseña actualizada'
 				res.render('exitoU', {txt})
-				con.query('UPDATE usuario SET pas_usu="'+pass+'" WHERE cor_usu="'+user+'"',(err,respuesta,fields)=> {
+				pasC=cifrar(pass);
+				con.query('UPDATE usuario SET pas_usu="'+pasC+'" WHERE cor_usu="'+user+'"',(err,respuesta,fields)=> {
 					txt='Hubo un error, vuelva a intentarlo más tarde';
 					if(err)return res.render('errorU', {txt})	
 				})
@@ -491,6 +505,12 @@ function getReportes(callback) {
 }
 function getReportesU(id, callback) {
     con.query('SELECT id_rep, des_rep, nom_tip, nom_del FROM reporte INNER JOIN tipodelito ON reporte.id_tip=tipodelito.id_tip INNER JOIN delegacion ON reporte.id_del=delegacion.id_del where id_usu=? ORDER BY id_rep DESC LIMIT 15', [id],function(err, rows) {
+		if(err) return callback(err);
+		callback(null, rows);
+    });
+}
+function loginC(cor, callback) {
+    con.query('SELECT pas_usu FROM usuario WHERE cor_usu=?', [cor],function(err, rows) {
 		if(err) return callback(err);
 		callback(null, rows);
     });
@@ -640,16 +660,14 @@ function num(checkStr){
 	}
 	return todovalido;
 }
-var key='DarlingFranxx002';
+var key='Darling002';
 function cifrar(txt){
 	var ciphertext = CryptoJS.AES.encrypt(txt, key);
-	console.log("Cifrado: "+ciphertext);
 	return ciphertext;
 }
 function decifrar(ciphertext){
 	var bytes  = CryptoJS.AES.decrypt(ciphertext.toString(), key);
 	var plaintext = bytes.toString(CryptoJS.enc.Utf8);
-	console.log("Decifrado: "+plaintext);
 	return plaintext;
 }
 app.listen(3030,()=>{
