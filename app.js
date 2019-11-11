@@ -2,6 +2,7 @@ const express= require('express');
 const mysql=require('mysql');
 const session = require('express-session');
 const path = require('path');
+const CryptoJS = require("crypto-js");
 
 var app=express();
 var bodyParser=require('body-parser');
@@ -52,17 +53,38 @@ app.post('/agregarUsuario',(req,res) => {
 	let pass2=req.body.pass2
 	let txt;
 	try {
-		if(pass==pass2){
-			con.query('INSERT INTO usuario(`nom_usu`,`app_usu`,`apm_usu`,`fec_usu`,`usu_usu`,`cor_usu`,`pas_usu`) values("'+nom+'","'+app+'","'+apm+'","'+dat+'","'+usu+'","'+mail+'","'+pass+'")',(err,respuesta,fields)=> {
-				txt='Usuario y/o correo ya registrados';
-				if(err)return res.render('warning', {txt})
-				res.render('succesRe');
-			})
+		if(letras(nom) && letras(app) && letras(apm)){
+			if (alphaNumC(usu)&&alphaNumC(pass)) {
+				if(correo(usu) && fecha(dat)){
+					if(pass==pass2){
+						
+						con.query('INSERT INTO usuario(`nom_usu`,`app_usu`,`apm_usu`,`fec_usu`,`usu_usu`,`cor_usu`,`pas_usu`) values("'+nom+'","'+app+'","'+apm+'","'+dat+'","'+usu+'","'+mail+'","'+pass+'")',(err,respuesta,fields)=> {
+							txt='Usuario y/o correo ya registrados';
+							if(err)return res.render('warning', {txt})
+							res.render('succesRe');
+						});
+					}
+					else{
+						txt='Las contraseñas no coinciden'
+						res.render('warning', {txt});		
+					}
+				}
+				else{
+					txt='Correo o fecha invalida'
+					res.render('warning', {txt});
+				}
+				
+			}
+			else{
+				txt='El usuario y contraseña solo acepta letras, números y estos caracteres epeciales .¿?¡!<>';
+				res.render('warning', {txt});
+			}
 		}
 		else{
-			txt='Las contraseñas no coinciden'
-			res.render('warning', {txt});		
+			txt='Ingresa solo letras en el nombre y apellidos.'
+			res.render('warning', {txt});
 		}
+		
 	} catch (error) {
 		console.log(error);
 		txt='Hubo un error, vuelva a intentarlo más tarde';
@@ -76,26 +98,42 @@ app.post('/agregarUsuario',(req,res) => {
 app.post('/loginU',(req,res)=> {
 	let usu=req.body.dino;
 	let pass=req.body.pass;
-	let txt='Usuario y/o contraseña incorrecta';
-	if(usu=='milton@admon.com' && pass=='qwerty'){
-		req.session.loggedin = true;
-		req.session.username = 'admon';
-		req.session.cookie.maxAge = 60*60*1000;
-		res.redirect('/homeAd');
+	let txt='La contraseña solo acepta letras, números y estos caracteres epeciales .¿?¡!<>';
+	if (alphaNumC(pass)) {
+		txt='Correo Invalido';
+		if(correo(usu)){
+			txt='Usuario y/o contraseña incorrecta';
+			if(usu=='milton@admon.com' && pass=='qwerty'){
+				req.session.loggedin = true;
+				req.session.username = 'admon';
+				req.session.cookie.maxAge = 60*60*1000;
+				res.redirect('/homeAd');
+			}
+			else{
+				//let usuC=cifrar(usu);
+				//decifrar(usuC);
+				con.query('SELECT * FROM usuario WHERE cor_usu = ? AND pas_usu = ?', [usu, pass], function(err, results, fields) {
+					if (err) throw err;
+					if (results.length > 0) {
+						req.session.loggedin = true;
+						req.session.username = usu;
+						req.session.cookie.maxAge = 60*60*1000;
+						res.redirect('/home')
+					} else {
+						res.render('warning', {txt});
+					}			
+				});	
+			}
+		}
+		else{
+			res.render('warning', {txt});
+		}
+		
 	}
 	else{
-		con.query('SELECT * FROM usuario WHERE cor_usu = ? AND pas_usu = ?', [usu, pass], function(err, results, fields) {
-			if (err) throw err;
-			if (results.length > 0) {
-				req.session.loggedin = true;
-				req.session.username = usu;
-				req.session.cookie.maxAge = 60*60*1000;
-				res.redirect('/home')
-			} else {
-				res.render('warning', {txt});
-			}			
-		});	
+		res.render('warning', {txt});
 	}
+	
 });
 app.get('/logout', function(req, res) {
 	if (req.session.loggedin) {
@@ -274,11 +312,7 @@ app.post('/editarDel', function(req, res) {
 //PART USER
 app.get('/contacto', function(req, res) {
 	if (req.session.loggedin) {
-		let usu=req.session.username;
-		getDatUsu(usu, function (err,data){
-				pas = data.map(obj => obj.pas_usu);
-				res.render('modPass', {pas});
-		});
+		res.render('contacto');
 				
 	} else {
 		res.render('index');
@@ -286,11 +320,7 @@ app.get('/contacto', function(req, res) {
 });
 app.get('/aviso', function(req, res) {
 	if (req.session.loggedin) {
-		let usu=req.session.username;
-		getDatUsu(usu, function (err,data){
-				pas = data.map(obj => obj.pas_usu);
-				res.render('modPass', {pas});
-		});
+		res.render('aviso');
 				
 	} else {
 		res.render('index');
@@ -377,13 +407,19 @@ app.post('/editarPass', function(req, res) {
 		let user=req.session.username;
 		let pass=req.body.pass;
 		let pass2=req.body.pass2;
-		if(pass==pass2){
-			let txt='Contraseña actualizada'
-			res.render('exitoU', {txt})
-			con.query('UPDATE usuario SET pas_usu="'+pass+'" WHERE cor_usu="'+user+'"',(err,respuesta,fields)=> {
-				txt='Hubo un error, vuelva a intentarlo más tarde';
-				if(err)return res.render('errorU', {txt})	
-			})
+		if(alphaNumC(pass)){
+			if(pass==pass2){
+				let txt='Contraseña actualizada'
+				res.render('exitoU', {txt})
+				con.query('UPDATE usuario SET pas_usu="'+pass+'" WHERE cor_usu="'+user+'"',(err,respuesta,fields)=> {
+					txt='Hubo un error, vuelva a intentarlo más tarde';
+					if(err)return res.render('errorU', {txt})	
+				})
+			}
+			else{
+				txt='La contraseña solo acepta letras, números y estos caracteres epeciales .¿?¡!<>';
+				res.render('errorU', {txt})
+			}
 		}
 		else{
 			txt='Las constraseñas no coinciden, vuelva a intentarlo';
@@ -401,16 +437,21 @@ app.post('/sumReporte', function(req, res) {
 		let delito=req.body.delito;
 		let del=req.body.delegacion;
 		let des=req.body.des;
-		console.log(delito)
-		let txt='Reporte agregado'
-		res.render('exitoU', {txt})
-		getDatUsu(usu, function (err,data){
-			idU = data.map(obj => obj.id_usu);
-			con.query('INSERT INTO reporte(`des_rep`,`id_tip`,`id_del`,`id_usu`) values("'+des+'","'+delito+'","'+del+'","'+idU+'")',(err,respuesta,fields)=> {
-				txt='Hubo un error, vuelva a intentarlo más tarde';
-				if(err)return res.render('errorU', {txt})	
+		if(escritura(des) && num(delito) && num(del)){
+			let txt='Reporte agregado'
+			res.render('exitoU', {txt})
+			getDatUsu(usu, function (err,data){
+				idU = data.map(obj => obj.id_usu);
+				con.query('INSERT INTO reporte(`des_rep`,`id_tip`,`id_del`,`id_usu`) values("'+des+'","'+delito+'","'+del+'","'+idU+'")',(err,respuesta,fields)=> {
+					txt='Hubo un error, vuelva a intentarlo más tarde';
+					if(err)return res.render('errorU', {txt})	
+				});
 			});
-		});
+		}
+		else{
+			txt='Modificaste algun valor, vuelva a intentarlo más tarde';
+			res.render('errorU', {txt})	
+		}
 	} else {
 		res.render('index');
 	}
@@ -454,7 +495,163 @@ function getReportesU(id, callback) {
 		callback(null, rows);
     });
 }
-
+//Security
+function letras(checkStr){
+	var checkOk="ABDEFGHIJHKLMNÑOPQRSTUVWXYZÁÉÍÓÚ"+"abcdefghijklmnopqrstuvwxyzáéíóú"+" ";
+    var todovalido=true;
+    for(i=0;i<checkStr.length;i++)
+    {
+        ch=checkStr.charAt(i);
+        for(j=0;j<checkOk.length;j++)
+        {
+            if(ch==checkOk.charAt(j))
+            {
+                break;
+            }
+        }
+        if(j==checkOk.length)
+        {
+            todovalido=false;
+            break;
+        }
+	}
+	if(checkStr.length<1 || checkStr.length>20){
+		todovalido=false;
+	}
+	return todovalido;
+}
+function alphaNumC(checkStr){
+	var checkOk="ABDEFGHIJHKLMNÑOPQRSTUVWXYZÁÉÍÓÚ"+"abcdefghijklmnopqrstuvwxyzáéíóú"+"1234567890.¡?¿!<>";
+    var todovalido=true;
+    for(i=0;i<checkStr.length;i++)
+    {
+        ch=checkStr.charAt(i);
+        for(j=0;j<checkOk.length;j++)
+        {
+            if(ch==checkOk.charAt(j))
+            {
+                break;
+            }
+        }
+        if(j==checkOk.length)
+        {
+            todovalido=false;
+            break;
+        }
+	}
+	if(checkStr.length<1 || checkStr.length>30){
+		todovalido=false;
+	}
+	return todovalido;
+}
+function escritura(checkStr){
+	var checkOk="ABDEFGHIJHKLMNÑOPQRSTUVWXYZÁÉÍÓÚ"+"abcdefghijklmnopqrstuvwxyzáéíóú"+" 1234567890.¡?¿!<>#$%&()=,;:-_";
+    var todovalido=true;
+    for(i=0;i<checkStr.length;i++)
+    {
+        ch=checkStr.charAt(i);
+        for(j=0;j<checkOk.length;j++)
+        {
+            if(ch==checkOk.charAt(j))
+            {
+                break;
+            }
+        }
+        if(j==checkOk.length)
+        {
+            todovalido=false;
+            break;
+        }
+	}
+	if(checkStr.length<4 || checkStr.length>255){
+		todovalido=false;
+	}
+	return todovalido;
+}
+function correo(checkStr){
+	var checkOk="ABDEFGHIJHKLMNÑOPQRSTUVWXYZ"+"abcdefghijklmnopqrstuvwxyz"+"1234567890.¡?¿!<>@";
+    var todovalido=true;
+    for(i=0;i<checkStr.length;i++)
+    {
+        ch=checkStr.charAt(i);
+        for(j=0;j<checkOk.length;j++)
+        {
+            if(ch==checkOk.charAt(j))
+            {
+                break;
+            }
+        }
+        if(j==checkOk.length)
+        {
+            todovalido=false;
+            break;
+        }
+	}
+	if(checkStr.length<5 || checkStr.length>30){
+		todovalido=false;
+	}
+	return todovalido;
+}
+function fecha(checkStr){
+	var checkOk="1234567890-";
+    var todovalido=true;
+    for(i=0;i<checkStr.length;i++)
+    {
+        ch=checkStr.charAt(i);
+        for(j=0;j<checkOk.length;j++)
+        {
+            if(ch==checkOk.charAt(j))
+            {
+                break;
+            }
+        }
+        if(j==checkOk.length)
+        {
+            todovalido=false;
+            break;
+        }
+	}
+	if(!checkStr.length==10){
+		todovalido=false;
+	}
+	return todovalido;
+}
+function num(checkStr){
+	var checkOk="1234567890";
+    var todovalido=true;
+    for(i=0;i<checkStr.length;i++)
+    {
+        ch=checkStr.charAt(i);
+        for(j=0;j<checkOk.length;j++)
+        {
+            if(ch==checkOk.charAt(j))
+            {
+                break;
+            }
+        }
+        if(j==checkOk.length)
+        {
+            todovalido=false;
+            break;
+        }
+	}
+	if(checkStr.length<1 || checkStr.length>2){
+		todovalido=false;
+	}
+	return todovalido;
+}
+var key='DarlingFranxx002';
+function cifrar(txt){
+	var ciphertext = CryptoJS.AES.encrypt(txt, key);
+	console.log("Cifrado: "+ciphertext);
+	return ciphertext;
+}
+function decifrar(ciphertext){
+	var bytes  = CryptoJS.AES.decrypt(ciphertext.toString(), key);
+	var plaintext = bytes.toString(CryptoJS.enc.Utf8);
+	console.log("Decifrado: "+plaintext);
+	return plaintext;
+}
 app.listen(3030,()=>{
 	console.log('Servidor escuchando en el puerto 3030')
 })

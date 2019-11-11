@@ -112,13 +112,13 @@ DROP TABLE IF EXISTS `usuario`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `usuario` (
   `id_usu` int(11) NOT NULL AUTO_INCREMENT,
-  `nom_usu` varchar(30) NOT NULL,
-  `app_usu` varchar(30) NOT NULL,
-  `apm_usu` varchar(30) NOT NULL,
+  `nom_usu` varchar(255) NOT NULL,
+  `app_usu` varchar(255) NOT NULL,
+  `apm_usu` varchar(255) NOT NULL,
   `fec_usu` date NOT NULL,
-  `usu_usu` varchar(30) NOT NULL,
-  `cor_usu` varchar(40) NOT NULL,
-  `pas_usu` varchar(30) NOT NULL,
+  `usu_usu` varchar(255) NOT NULL,
+  `cor_usu` varchar(255) NOT NULL,
+  `pas_usu` varchar(255) NOT NULL,
   PRIMARY KEY (`id_usu`),
   UNIQUE KEY `usu_usu` (`usu_usu`),
   UNIQUE KEY `cor_usu` (`cor_usu`)
