@@ -55,7 +55,7 @@ app.post('/agregarUsuario',(req,res) => {
 	try {
 		if(letras(nom) && letras(app) && letras(apm)){
 			if (alphaNumC(usu)&&alphaNumC(pass)) {
-				if(correo(usu) && fecha(dat)){
+				if(correo(mail) && fecha(dat)){
 					if(pass==pass2){
 						nomC=cifrar(nom);
 						appC=cifrar(app);
@@ -338,16 +338,16 @@ app.get('/datosUsu', function(req, res) {
 	if (req.session.loggedin) {
 		let usu=req.session.username;
 		getDatUsu(usu, function (err,data){
-				nom = data.map(obj => obj.nom_usu);
-				app = data.map(obj => obj.app_usu);
-				apm = data.map(obj => obj.apm_usu);
+				nomC = data.map(obj => obj.nom_usu);
+				appC = data.map(obj => obj.app_usu);
+				apmC = data.map(obj => obj.apm_usu);
 				cor = data.map(obj => obj.cor_usu);
-				usu = data.map(obj => obj.usu_usu);
-				nomD=decifrar(nom);
-				appD=decifrar(app);
-				apmD=decifrar(apm);
-				usuD=decifrar(usu);
-				res.render('datosUsu', {nomD, appD, apmD, cor, usuD});
+				usuC = data.map(obj => obj.usu_usu);
+				nom=decifrar(nomC);
+				app=decifrar(appC);
+				apm=decifrar(apmC);
+				usu=decifrar(usuC);
+				res.render('datosUsu', {nom, app, apm, cor, usu});
 		});
 				
 	} else {
@@ -358,9 +358,9 @@ app.get('/modPass', function(req, res) {
 	if (req.session.loggedin) {
 		let usu=req.session.username;
 		getDatUsu(usu, function (err,data){
-				pas = data.map(obj => obj.pas_usu);
-				pasD=decifrar(pas);
-				res.render('modPass', {pasD});
+				pasC = data.map(obj => obj.pas_usu);
+				pas=decifrar(pas);
+				res.render('modPass', {pas});
 		});
 				
 	} else {
