@@ -292,15 +292,11 @@ app.post('/killUsu', function(req, res) {
 	if (req.session.loggedin && req.session.username=='admon') {
 		let id=req.body.id
 		let txt='Usuario eliminado'
-		
+		res.render('exito', {txt})
 		con.query('DELETE FROM usuario WHERE id_usu="'+id+'"',(err,respuesta,fields)=> {
-			
 			if(err){
 				txt='Hubo un error al eliminar el dinosaurio'
 				return res.render('warning2', {txt})	
-			}
-			else{
-				res.render('exito', {txt})
 			}
 		})
 	} else {
