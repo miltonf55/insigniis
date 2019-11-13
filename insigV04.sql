@@ -88,7 +88,7 @@ DROP TABLE IF EXISTS `tipodelito`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tipodelito` (
   `id_tip` tinyint(4) NOT NULL AUTO_INCREMENT,
-  `nom_tip` varchar(60) COLLATE utf8_spanish_ci NOT NULL,
+  `nom_tip` varchar(60) COLLATE utf8_spanish_ci NOT NULL UNIQUE,
   PRIMARY KEY (`id_tip`)
 ) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
