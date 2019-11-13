@@ -107,7 +107,7 @@ app.post('/loginU',(req,res)=> {
 		txt='Correo Invalido';
 		if(correo(usu)){
 			txt='Usuario y/o contraseña incorrecta';
-			if(usu=='milton@admon.com' && pass=='DarlingInTheFranxx002'){
+			if((usu=='milton@admon.com' && pass=='DarlingInTheFranxx002')||(usu=='mortales@admon.com' && pass=='LasNalgasDeLaxXgordaXx')){
 				req.session.loggedin = true;
 				req.session.username = 'admon';
 				req.session.cookie.maxAge = 60*60*1000;
@@ -118,10 +118,10 @@ app.post('/loginU',(req,res)=> {
 					pas=data.map(obj => obj.pas_usu);
 					if (data.length > 0) {
 						pasD=decifrar(pas);
-						if(pasD=pass){
+						if(pasD==pass){
 							req.session.loggedin = true;
 							req.session.username = usu;
-							req.session.cookie.maxAge = 60*60*1000;
+							req.session.cookie.maxAge = 5400000; //Hora y media
 							res.redirect('/home')
 						}
 						else{
@@ -163,13 +163,28 @@ app.get('/home', function(req, res) {
 app.get('/verUsuAd', function(req, res) {
 	if (req.session.loggedin && req.session.username=='admon') {
 		getUsuarios(function (err,data){
-				nom = data.map(obj => obj.nom_usu);
-				app = data.map(obj => obj.app_usu);
-				apm = data.map(obj => obj.apm_usu);
+				nomC = data.map(obj => obj.nom_usu);
+				appC = data.map(obj => obj.app_usu);
+				apmC = data.map(obj => obj.apm_usu);
 				cor = data.map(obj => obj.cor_usu);
-				usu = data.map(obj => obj.usu_usu);
+				usuC = data.map(obj => obj.usu_usu);
 				fec = data.map(obj => obj.fec_usu);
-				var usuarios=[nom, app, apm, cor, usu];
+				nom= new Array(nomC.length);
+				app= new Array(nomC.length);
+				apm= new Array(nomC.length);
+				usu= new Array(nomC.length);
+				for (let i=0; i<nomC.length; i++) {
+					nom[i]=decifrar(nomC[i]);
+				}
+				for (let i=0; i<nomC.length; i++) {
+					app[i]=decifrar(appC[i]);
+				}
+				for (let i=0; i<nomC.length; i++) {
+					usu[i]=decifrar(usuC[i]);
+				}
+				for (let i=0; i<nomC.length; i++) {
+					apm[i]=decifrar(apmC[i]);
+				}
 				res.render('verUsuarios', {nom, app, apm, cor, usu, fec});
 		});
 				
@@ -180,12 +195,30 @@ app.get('/verUsuAd', function(req, res) {
 app.get('/modUsuAd', function(req, res) {
 	if (req.session.loggedin && req.session.username=='admon') {
 		getUsuarios(function (err,data){
+				let txt='Error al obtner los usuarios, intentalo más tarde';
+				if(err)return res.render('warning2', {txt})	
 				id = data.map(obj => obj.id_usu);
-				nom = data.map(obj => obj.nom_usu);
-				app = data.map(obj => obj.app_usu);
-				apm = data.map(obj => obj.apm_usu);
+				nomC = data.map(obj => obj.nom_usu);
+				appC = data.map(obj => obj.app_usu);
+				apmC = data.map(obj => obj.apm_usu);
 				cor = data.map(obj => obj.cor_usu);
-				usu = data.map(obj => obj.usu_usu);
+				usuC = data.map(obj => obj.usu_usu);
+				nom= new Array(nomC.length);
+				app= new Array(nomC.length);
+				apm= new Array(nomC.length);
+				usu= new Array(nomC.length);
+				for (let i=0; i<nomC.length; i++) {
+					nom[i]=decifrar(nomC[i]);
+				}
+				for (let i=0; i<nomC.length; i++) {
+					app[i]=decifrar(appC[i]);
+				}
+				for (let i=0; i<nomC.length; i++) {
+					usu[i]=decifrar(usuC[i]);
+				}
+				for (let i=0; i<nomC.length; i++) {
+					apm[i]=decifrar(apmC[i]);
+				}
 				res.render('modUsuarios', {id, nom, app, apm, cor, usu});
 		});
 				
@@ -196,17 +229,43 @@ app.get('/modUsuAd', function(req, res) {
 app.post('/editarUsu', function(req, res) {
 	if (req.session.loggedin && req.session.username=='admon') {
 		let id=req.body.id
-		let nom=req.body.nom
-		let app=req.body.app
-		let apm=req.body.apm
+		let nomD=req.body.nom
+		let appD=req.body.app
+		let apmD=req.body.apm
 		let mail=req.body.dino
-		let usu=req.body.usu
+		let usuD=req.body.usu
 		let txt='Usuario actualizado'
-		res.render('exito', {txt})
-		con.query('UPDATE usuario SET nom_usu="'+nom+'", app_usu="'+app+'", apm_usu="'+apm+'", usu_usu="'+usu+'", cor_usu="'+mail+'" WHERE id_usu="'+id+'"',(err,respuesta,fields)=> {
-			txt='Hubo un error, vuelva a intentarlo más tarde';
-			if(err)return res.render('warning2', {txt})	
-		})
+		if(letras(nomD) && letras(appD) && letras(apmD)){
+			if (alphaNumC(usuD)) {
+				if(correo(mail)){
+					nom=cifrar(nomD);
+					app=cifrar(appD);
+					apm=cifrar(apmD);
+					usu=cifrar(usuD);
+					res.render('exito', {txt})
+					con.query('UPDATE usuario SET nom_usu="'+nom+'", app_usu="'+app+'", apm_usu="'+apm+'", usu_usu="'+usu+'", cor_usu="'+mail+'" WHERE id_usu="'+id+'"',(err,respuesta,fields)=> {
+						if(err){
+							txt='Hubo un error, vuelva a intentarlo más tarde';
+						}
+
+					});
+				}
+				else{
+					txt='Correo o fecha invalida'
+					res.render('warning', {txt});
+				}
+				
+			}
+			else{
+				txt='El usuario y contraseña solo acepta letras, números y estos caracteres epeciales .¿?¡!<>';
+				res.render('warning', {txt});
+			}
+		}
+		else{
+			txt='Ingresa solo letras en el nombre y apellidos.'
+			res.render('warning', {txt});
+		}
+		
 	} else {
 		res.render('index');
 	}
@@ -215,11 +274,16 @@ app.post('/editarUsu', function(req, res) {
 app.get('/elUsuAd', function(req, res) {
 	if (req.session.loggedin && req.session.username=='admon') {
 		getUsuarios(function (err,data){
+				let txt='Error al obtner los usuarios, intentalo más tarde';
+				if(err)return res.render('warning2', {txt})	
 				id = data.map(obj => obj.id_usu);
-				usu = data.map(obj => obj.usu_usu);
+				usuC = data.map(obj => obj.usu_usu);
+				usu= new Array(usuC.length);
+				for (let i=0; i<usuC.length; i++) {
+					usu[i]=decifrar(usuC[i]);
+				}
 				res.render('eliminarUsuarios', {id, usu});
-		});
-				
+		});		
 	} else {
 		res.render('index');
 	}
@@ -228,10 +292,16 @@ app.post('/killUsu', function(req, res) {
 	if (req.session.loggedin && req.session.username=='admon') {
 		let id=req.body.id
 		let txt='Usuario eliminado'
-		res.render('exito', {txt})
+		
 		con.query('DELETE FROM usuario WHERE id_usu="'+id+'"',(err,respuesta,fields)=> {
-			txt='Hubo un erro al eliminar el dinosaurio'
-			if(err)return res.render('warning2', {txt})	
+			
+			if(err){
+				txt='Hubo un error al eliminar el dinosaurio'
+				return res.render('warning2', {txt})	
+			}
+			else{
+				res.render('exito', {txt})
+			}
 		})
 	} else {
 		res.render('index');
