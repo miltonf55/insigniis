@@ -3,22 +3,25 @@ block title
     |Agregar Reporte
 block main
     main
-        h1 Agregar reporte
-        form(action="/sumReporte", method="post")
-            div.form-group
-                label(for="exampleFormControlSelect1")|Tipo de Delito
-                select(class="form-control", id="exampleFormControlSelect1", name="delito")
-                    each val, index in idD
-                        option(value=val)
-                            | !{delito[index]}
-            div.form-group
-                label(for="exampleFormControlSelect1")|Delegación donde ocurrio
-                select(class="form-control", id="exampleFormControlSelect1", name="delegacion")
-                    each val, index in id
-                        option(value=val)
-                            | !{del[index]}
-            div.form-group
-                label(for="exampleFormControlSelect1")|Descripción de como ocurrio
-                textarea(class="form-control", id="exampleFormControlTextarea1", rows="3", maxlength=255, minlength=4, placeholder="Descripción, maximo 255 caracteres", name="des", required)
-            button(type="submit" class="btn btn-success")
-                                    |Agregar
+        div.jumbotron
+            h1.display-5
+                |Agregar Reporte
+            hr.my-4
+            form(action="/sumReporte", method="post")
+                div.form-group
+                    label(for="exampleFormControlSelect1")|Tipo de Delito
+                    select(class="form-control", id="exampleFormControlSelect1", name="delito")
+                        each val, index in idD
+                            option(value=val)
+                                | !{delito[index]}
+                div.form-group
+                    label(for="exampleFormControlSelect1")|Delegación donde ocurrio
+                    select(class="form-control", id="exampleFormControlSelect1", name="delegacion")
+                        each val, index in id
+                            option(value=val)
+                                | !{del[index]}
+                div.form-group
+                    label(for="exampleFormControlSelect1")|Descripción de como ocurrio
+                    textarea(class="form-control", id="exampleFormControlTextarea1", rows="3", maxlength=255, minlength=4, placeholder="Descripción, maximo 255 caracteres", name="des", required)
+                button(type="submit" class="btn btn-success")
+                                        |Agregar
