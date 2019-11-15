@@ -345,19 +345,26 @@ app.get('/addDel', function(req, res) {
 app.post('/sumDelito',(req,res) => {
 	if (req.session.loggedin && req.session.username=='admon') {
 		let des=req.body.des
-		let txt='Delito Agregado'
-		res.render('exito', {txt})
-		try {
-				con.query('INSERT INTO tipodelito(`nom_tip`) values("'+des+'")',(err,respuesta,fields)=> {
-					txt='Hubo un error, vuelva a intentarlo más tarde';
-					if(err)return res.render('warning2', {txt})
-					res.render('succesRe');
-				})
-		} catch (error) {
-			console.log(error);
-			txt='Hubo un error, vuelva a intentarlo más tarde';
+		if(letras(des)){
+			let txt='Delito Agregado'
+			res.render('exito', {txt})
+			try {
+					con.query('INSERT INTO tipodelito(`nom_tip`) values("'+des+'")',(err,respuesta,fields)=> {
+						txt='Hubo un error, vuelva a intentarlo más tarde';
+						if(err)return res.render('warning2', {txt})
+						res.render('succesRe');
+					})
+			} catch (error) {
+				console.log(error);
+				txt='Hubo un error, vuelva a intentarlo más tarde';
+				res.render('warning2', {txt});
+			}	
+		}
+		else{
+			let txt='Ingresa puras letras';
 			res.render('warning2', {txt});
-		}	
+		}
+		
 	} else {
 		res.render('index');
 	}
@@ -367,11 +374,17 @@ app.post('/editarDel', function(req, res) {
 		let id=req.body.id
 		let nom=req.body.nom
 		let txt='Delito actualizado'
-		res.render('exito', {txt})
-		con.query('UPDATE tipodelito SET nom_tip="'+nom+'" WHERE id_tip="'+id+'"',(err,respuesta,fields)=> {
-			txt='Hubo un error, vuelva a intentarlo más tarde';
-			if(err)return res.render('warning2', {txt})	
-		})
+		if(letras(des) && num(id)){
+			res.render('exito', {txt})
+			con.query('UPDATE tipodelito SET nom_tip="'+nom+'" WHERE id_tip="'+id+'"',(err,respuesta,fields)=> {
+				txt='Hubo un error, vuelva a intentarlo más tarde';
+				if(err)return res.render('warning2', {txt})	
+			})
+		}
+		else{
+			txt='Ingresa puras letras';
+			res.render('warning2', {txt});
+		}
 	} else {
 		res.render('index');
 	}
@@ -631,7 +644,7 @@ function alphaNumC(checkStr){
 	return todovalido;
 }
 function escritura(checkStr){
-	var checkOk="ABDEFGHIJHKLMNÑOPQRSTUVWXYZÁÉÍÓÚ"+"abcdefghijklmnopqrstuvwxyzáéíóú"+" 1234567890.¡?¿!<>#$%&()=,;:-_";
+	var checkOk="ABDEFGHIJHKLMNÑOPQRSTUVWXYZÁÉÍÓÚ"+"abcdefghijklmnopqrstuvwxyzáéíóú"+"1234567890.¡?¿!<>#$%&()=,;:-_ ";
     var todovalido=true;
     for(i=0;i<checkStr.length;i++)
     {
@@ -652,6 +665,7 @@ function escritura(checkStr){
 	if(checkStr.length<4 || checkStr.length>255){
 		todovalido=false;
 	}
+	console.log(todovalido+" escribir");
 	return todovalido;
 }
 function correo(checkStr){
@@ -724,6 +738,7 @@ function num(checkStr){
 	if(checkStr.length<1 || checkStr.length>2){
 		todovalido=false;
 	}
+	console.log(todovalido);
 	return todovalido;
 }
 var key='Darling002';
