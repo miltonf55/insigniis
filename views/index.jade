@@ -20,6 +20,15 @@ block cuerpo
 					input(type="text", class="input", placeholder="Usuario", name="usu", maxlength=30,required)
 					input(type="password", class="input", placeholder="Password", name="pass", maxlength=30, minlength=6, required)
 					input(type="password", class="input", placeholder="Confirm Password", name="pass2", maxlength=30, required)
+					div(class="check")
+						a(href="aviso.html")
+							|Aviso de Privacidad:
+						br
+						label(for="true")|Acepto el aviso
+							input(type="radio", name="acep", class="check", value="true", id="true")
+						label(for="false")|No Acepto
+							input(type="radio", name="acep", class="check", values="false", id="false")
+						br
 					button(class="submit-btn")
 						| Registrarse
 		div.login
