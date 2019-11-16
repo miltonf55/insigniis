@@ -51,50 +51,56 @@ app.post('/agregarUsuario',(req,res) => {
 	let usu=req.body.usu
 	let pass=req.body.pass
 	let pass2=req.body.pass2
+	let aviso=req.body.acep
 	let txt;
-	try {
-		if(letras(nom) && letras(app) && letras(apm)){
-			if (alphaNumC(usu)&&alphaNumC(pass)) {
-				if(correo(mail) && fecha(dat)){
-					if(pass==pass2){
-						nomC=cifrar(nom);
-						appC=cifrar(app);
-						apmC=cifrar(apm);
-						usuC=cifrar(usu);
-						pasC=cifrar(pass);
-						con.query('INSERT INTO usuario(`nom_usu`,`app_usu`,`apm_usu`,`fec_usu`,`usu_usu`,`cor_usu`,`pas_usu`) values("'+nomC+'","'+appC+'","'+apmC+'","'+dat+'","'+usuC+'","'+mail+'","'+pasC+'")',(err,respuesta,fields)=> {
-							txt='Usuario y/o correo ya registrados';
-							if(err)return res.render('warning', {txt})
-							res.render('succesRe');
-						});
+	if(aviso=="true"){
+		try {
+			if(letras(nom) && letras(app) && letras(apm)){
+				if (alphaNumC(usu)&&alphaNumC(pass)) {
+					if(correo(mail) && fecha(dat)){
+						if(pass==pass2){
+							nomC=cifrar(nom);
+							appC=cifrar(app);
+							apmC=cifrar(apm);
+							usuC=cifrar(usu);
+							pasC=cifrar(pass);
+							con.query('INSERT INTO usuario(`nom_usu`,`app_usu`,`apm_usu`,`fec_usu`,`usu_usu`,`cor_usu`,`pas_usu`) values("'+nomC+'","'+appC+'","'+apmC+'","'+dat+'","'+usuC+'","'+mail+'","'+pasC+'")',(err,respuesta,fields)=> {
+								txt='Usuario y/o correo ya registrados';
+								if(err)return res.render('warning', {txt})
+								res.render('succesRe');
+							});
+						}
+						else{
+							txt='Las contraseñas no coinciden'
+							res.render('warning', {txt});		
+						}
 					}
 					else{
-						txt='Las contraseñas no coinciden'
-						res.render('warning', {txt});		
+						txt='Correo o fecha invalida'
+						res.render('warning', {txt});
 					}
+					
 				}
 				else{
-					txt='Correo o fecha invalida'
+					txt='El usuario y contraseña solo acepta letras, números y estos caracteres epeciales .¿?¡!<>';
 					res.render('warning', {txt});
 				}
-				
 			}
 			else{
-				txt='El usuario y contraseña solo acepta letras, números y estos caracteres epeciales .¿?¡!<>';
+				txt='Ingresa solo letras en el nombre y apellidos.'
 				res.render('warning', {txt});
 			}
-		}
-		else{
-			txt='Ingresa solo letras en el nombre y apellidos.'
+			
+		} catch (error) {
+			console.log(error);
+			txt='Hubo un error, vuelva a intentarlo más tarde';
 			res.render('warning', {txt});
 		}
-		
-	} catch (error) {
-		console.log(error);
-		txt='Hubo un error, vuelva a intentarlo más tarde';
+	}
+	else{
+		txt='Una lastima que no hayas aceptado nuestro aviso de privacidad.'
 		res.render('warning', {txt});
 	}
-		
 	
 	
 });
